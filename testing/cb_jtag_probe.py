@@ -27,6 +27,8 @@ class JtagProtocol:
     CMD_SCAN = 0x01
     CMD_NSRST_HIGH = 0x02
     CMD_NSRST_LOW = 0x03
+    CMD_GET_FW_VERSION = 0x04
+    FW_VERSION_PAYLOAD_LEN = 32
     STATUS_OK = 0x00
     HEADER_FMT_REQ = "<BBHI"
     HEADER_FMT_RSP = "<BBHI"
@@ -86,6 +88,34 @@ class JtagProtocol:
             raise ProtocolError(f"device reported error status: {status}")
 
         return status, flags
+
+    @classmethod
+    def parse_firmware_version_response(cls, rsp):
+        header_size = struct.calcsize(cls.HEADER_FMT_RSP)
+        expected_n_bits = cls.FW_VERSION_PAYLOAD_LEN * 8
+        expected_len = header_size + cls.FW_VERSION_PAYLOAD_LEN
+
+        if len(rsp) < header_size:
+            raise ProtocolError("short response header")
+
+        status, flags, reserved, rsp_bits = struct.unpack(cls.HEADER_FMT_RSP, rsp[:header_size])
+
+        if reserved != 0:
+            raise ProtocolError(f"invalid reserved field in response: {reserved}")
+        if status != cls.STATUS_OK:
+            raise ProtocolError(f"device reported error status: {status}")
+        if rsp_bits != expected_n_bits:
+            raise ProtocolError(
+                f"response n_bits mismatch for firmware version: expected {expected_n_bits}, got {rsp_bits}"
+            )
+        if len(rsp) != expected_len:
+            raise ProtocolError(
+                f"invalid firmware version payload length: expected {expected_len}, got {len(rsp)}"
+            )
+
+        payload = rsp[header_size:]
+        version = payload.split(b"\x00", 1)[0].decode("ascii", errors="strict")
+        return version, flags
 
 
 
@@ -236,6 +266,17 @@ class CBJtagProbe():
             return buf
         raise TypeError("tdo_buf must be a writable bytearray or writable memoryview")
 
+    def get_firmware_version(self):
+        payload = JtagProtocol.build_control_request(JtagProtocol.CMD_GET_FW_VERSION)
+        self.ep_out.write(payload)
+
+        expected_rsp = struct.calcsize(JtagProtocol.HEADER_FMT_RSP) + JtagProtocol.FW_VERSION_PAYLOAD_LEN
+        rsp = bytes(self.ep_in.read(expected_rsp, timeout=1000))
+        version, _ = JtagProtocol.parse_firmware_version_response(rsp)
+
+        return version
+
+
     def set_sys_reset_pin_high(self):
         payload = JtagProtocol.build_control_request(JtagProtocol.CMD_NSRST_HIGH)
         self.ep_out.write(payload)
@@ -289,6 +330,9 @@ if __name__ == "__main__":
         tdi = bytes([0xFF, 0xaa, 0xFF, 0xaa, 0xFF, 0xaa, 0xFF, 0xaa])
         tms = bytes([0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01])
         tdo = bytearray(len(tdi))
+
+        v = jtag.get_firmware_version()
+        print(f"Firmware version: {v}")
 
         jtag.set_sys_reset_pin_low()
 

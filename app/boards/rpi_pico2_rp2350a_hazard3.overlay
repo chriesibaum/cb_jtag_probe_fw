@@ -1,0 +1,45 @@
+/ {
+	aliases {
+		jtag-tck = &jtag_tck;
+		jtag-tms = &jtag_tms;
+		jtag-tdi = &jtag_tdi;
+		jtag-tdo = &jtag_tdo;
+		jtag-ntrst = &jtag_ntrst;
+		jtag-nsrst = &jtag_nsrst;
+	};
+
+	jtag_pins: jtag_pins {
+		compatible = "gpio-keys";
+
+		jtag_tck: jtag_tck {
+			gpios = <&gpio0 10 GPIO_ACTIVE_HIGH>;
+			label = "JTAG TCK";
+		};
+
+		jtag_tms: jtag_tms {
+			gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+			label = "JTAG TMS";
+		};
+
+		jtag_tdi: jtag_tdi {
+			gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+			label = "JTAG TDI";
+		};
+
+		jtag_tdo: jtag_tdo {
+			gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+			label = "JTAG TDO";
+		};
+
+		jtag_ntrst: jtag_ntrst {
+			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+			label = "JTAG nTRST";
+		};
+
+		jtag_nsrst: jtag_nsrst {
+			gpios = <&gpio0 15 GPIO_ACTIVE_HIGH>;
+			label = "JTAG nSRST";
+		};
+
+	};
+};

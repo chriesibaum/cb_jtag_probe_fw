@@ -1,5 +1,8 @@
 #include "usb_jtag_transport.h"
 
+#include <string.h>
+
+#include "fw_version.h"
 #include "jtag_engine.h"
 #include "jtag_proto.h"
 
@@ -81,6 +84,18 @@ int usb_jtag_transport_process_frame(const uint8_t *rx_buf,
 		rc = jtag_engine_set_nsrst_high();
 	} else if (cmd == JTAG_CMD_NSRST_LOW) {
 		rc = jtag_engine_set_nsrst_low();
+	} else if (cmd == JTAG_CMD_GET_FW_VERSION) {
+		uint8_t version_payload[JTAG_FW_VERSION_PAYLOAD_LEN] = {0};
+
+		strncpy((char *)version_payload, FW_VERSION_STRING,
+			JTAG_FW_VERSION_PAYLOAD_LEN - 1u);
+
+		rsp.status = JTAG_STATUS_OK;
+		rsp.flags = 0u;
+		rsp.n_bits = JTAG_FW_VERSION_PAYLOAD_LEN * 8u;
+		rsp.n_bytes = JTAG_FW_VERSION_PAYLOAD_LEN;
+		rsp.tdo = version_payload;
+		return jtag_proto_encode_scan_response(&rsp, tx_buf, tx_buf_len, tx_len);
 	} else {
 		rsp.status = JTAG_STATUS_BAD_CMD;
 		rsp.flags = 0u;

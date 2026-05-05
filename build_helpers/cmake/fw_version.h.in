@@ -1,0 +1,11 @@
+#ifndef _FW_VERSION_H_
+#define _FW_VERSION_H_
+
+/*  values come from GenV2CMN/build_helpers/cmake/git_watcher.cmake */
+
+#define FW_VERSION_MAJOR   @TAG_MAJOR@
+#define FW_VERSION_MINOR   @TAG_MINOR@
+#define FW_PATCHLEVEL      @TAG_PATCH@
+#define FW_VERSION_STRING  "@GIT_DESCRIBE@@GIT_DIRTY_STRING@"
+
+#endif /* _FW_VERSION_H_ */

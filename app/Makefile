@@ -6,15 +6,15 @@
 
 # BOARD := nucleo_u385rg_q   #  Nucleo U385RG, STM32U385RG, 2MB flash, 512kB RAM
 # BOARD := rpi_pico    #  Raspberry Pi Pico, RP2040, 2MB flash, 264kB RAM
-BOARD := rpi_pico2/rp2350a/m33    #  Raspberry Pi Pico, RP2040, 2MB flash, 264kB RAM
-
+BOARD := rpi_pico2/rp2350a/m33    #
+# BOARD := rpi_pico2/rp2350a/hazard3    #
 
 
 all:
 	@echo get the build process working...
 	west build -p auto -b $(BOARD) ./ \
 		-DEXTRA_CONF_FILE="prj_log.conf"
- 		#-DEXTRA_DTC_OVERLAY_FILE="app.overlay"
+
 
 
 clean:

@@ -3,6 +3,7 @@
 #include <zephyr/kernel.h>
 
 #include "error.h"
+#include "info.h"
 #include "jtag_engine.h"
 #include "usb_bulk_jtag.h"
 #include "usb_jtag_transport.h"
@@ -24,7 +25,7 @@ int32_t main(void)
 
     k_sleep(K_SECONDS(1));
 
-    LOG_INF("Application started");
+    info_log();
 
     while (true) {
         k_sleep(K_SECONDS(1));

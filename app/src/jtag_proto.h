@@ -11,6 +11,9 @@ extern "C" {
 #define JTAG_CMD_SCAN 0x01u
 #define JTAG_CMD_NSRST_HIGH 0x02u
 #define JTAG_CMD_NSRST_LOW 0x03u
+#define JTAG_CMD_GET_FW_VERSION 0x04u
+
+#define JTAG_FW_VERSION_PAYLOAD_LEN 32u
 
 #define JTAG_STATUS_OK 0x00u
 #define JTAG_STATUS_BAD_CMD 0x01u
