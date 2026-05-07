@@ -6,9 +6,10 @@
 
 # BOARD := nucleo_u385rg_q   #  Nucleo U385RG, STM32U385RG, 2MB flash, 512kB RAM
 # BOARD := rpi_pico    #  Raspberry Pi Pico, RP2040, 2MB flash, 264kB RAM
-BOARD := rpi_pico2/rp2350a/m33    #
+BOARD := rpi_pico2/rp2350a/m33
 # BOARD := rpi_pico2/rp2350a/hazard3    #
 
+.phony: all clean flash print release copy_uf2_PRI-PR2 copy_uf2_RP2350 flash.stm32cubeprogrammer
 
 all:
 	@echo get the build process working...
@@ -18,10 +19,23 @@ all:
 
 
 clean:
-	rm ./build/ -rf
+	rm -rf ./build/
+	rm -rf ./$(RELEASE_DIR)/
 
 flash:
 	west flash -r jlink
+
+RELEASE_DIR=release
+
+BOARD_NAME=$(subst /,_,$(BOARD))
+FW_VERSION=$(shell sed -n 's/^#define[[:space:]]\+FW_VERSION_STRING[[:space:]]\+"\([^"]*\)"/\1/p' ./build/fw_version.h)
+RELEASE_FILE_NAME=cb_jtag_probe_$(FW_VERSION)_$(BOARD_NAME).uf2
+
+release_bin:
+	@echo "Creating release package $(RELEASE_FILE_NAME)..."
+	@mkdir -p $(RELEASE_DIR)
+	@cp ./build/zephyr/zephyr.uf2 $(RELEASE_DIR)/$(RELEASE_FILE_NAME)
+
 
 
 copy_uf2_PRI-PR2:
