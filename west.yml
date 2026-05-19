@@ -1,0 +1,32 @@
+# West manifest for cb_jtag_probe firmware
+#
+# Usage:
+#   west init -m <this-repo-url> --mr <branch/tag>
+#   west update
+#
+# This manifest uses the T2 star topology: the application repo is the
+# west manifest repo and it imports Zephyr's own west.yml so all module
+# revisions are kept in sync with the chosen Zephyr release.
+
+manifest:
+  defaults:
+    remote: zephyrproject
+
+  remotes:
+    - name: zephyrproject
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject
+      revision: v4.4.0
+      import: true
+
+
+    - name: cb_zephyr_modules
+      url: https://github.com/chriesibaum/cb_zephyr_modules
+      revision: main     # todo: pin to a specific commit or tag once the repo is stable
+      path: modules/cb_zephyr_modules
+
+  self:
+    path: cb_jtag_probe.fw

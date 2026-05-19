@@ -5,7 +5,7 @@
 
 #include "jtag_engine.h"
 #include "jtag_proto.h"
-#include "error.h"
+#include "cb_error.h"
 
 // ---- logging includes/defines ----------------------------------------------
 #include <zephyr/logging/log.h>

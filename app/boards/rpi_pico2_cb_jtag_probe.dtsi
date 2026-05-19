@@ -1,12 +1,19 @@
 / {
 	aliases {
         sys-led = &led0;
+		sys-led-pwm = &pwm_led0;
+
 		jtag-tck = &jtag_tck;
 		jtag-tms = &jtag_tms;
 		jtag-tdi = &jtag_tdi;
 		jtag-tdo = &jtag_tdo;
 		jtag-ntrst = &jtag_ntrst;
 		jtag-nsrst = &jtag_nsrst;
+	};
+
+	pwm_leds {
+		compatible = "pwm-leds";
+		status = "okay";
 	};
 
 	jtag_pins: jtag_pins {
@@ -43,4 +50,8 @@
 		};
 
 	};
+};
+
+&pwm {
+	status = "okay";
 };

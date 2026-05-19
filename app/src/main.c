@@ -2,9 +2,9 @@
 
 #include <zephyr/kernel.h>
 
-#include "error.h"
-#include "sys.h"
-#include "info.h"
+#include "cb_error.h"
+#include "cb_sys.h"
+#include "cb_info.h"
 #include "jtag_engine.h"
 #include "usb_bulk_jtag.h"
 #include "usb_jtag_transport.h"
@@ -18,7 +18,7 @@ int32_t main(void)
 {
     int ret;
 
-    ret = sys_init();
+    ret = cb_sys_init();
     ERR_CHECK(ret < 0, ret, "System init failed (err %d)", ret);
 
     ret = jtag_engine_init();
@@ -29,7 +29,7 @@ int32_t main(void)
 
     k_sleep(K_SECONDS(1));
 
-    info_log();
+    cb_info();
 
     while (true) {
         k_sleep(K_SECONDS(1));
