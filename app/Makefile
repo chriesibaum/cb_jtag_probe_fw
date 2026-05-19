@@ -11,7 +11,9 @@ BOARD := rpi_pico2/rp2350a/m33
 
 .phony: all clean flash print release copy_uf2_PRI-PR2 copy_uf2_RP2350 flash.stm32cubeprogrammer
 
-all:
+all: build
+
+build:
 	@echo get the build process working...
 	west build -p auto -b $(BOARD) ./ \
 		-DEXTRA_CONF_FILE="prj_log.conf"
@@ -20,21 +22,23 @@ all:
 
 clean:
 	rm -rf ./build/
-	rm -rf ./$(RELEASE_DIR)/
+
+mr-proper: clean
+	rm -rf ./$(BIN_DIR)/
 
 flash:
 	west flash -r jlink
 
-RELEASE_DIR=release
+BIN_DIR=bin
 
 BOARD_NAME=$(subst /,_,$(BOARD))
-FW_VERSION=$(shell sed -n 's/^#define[[:space:]]\+FW_VERSION_STRING[[:space:]]\+"\([^"]*\)"/\1/p' ./build/fw_version.h)
-RELEASE_FILE_NAME=cb_jtag_probe_$(FW_VERSION)_$(BOARD_NAME).uf2
+FW_VERSION=$(shell sed -n 's/^#define[[:space:]]\+FW_VERSION_STRING[[:space:]]\+"\([^"]*\)"/\1/p' ./build/cb_info/fw_version.h)
+BIN_FILE_NAME=cb_jtag_probe_$(FW_VERSION)_$(BOARD_NAME).uf2
 
-release_bin:
-	@echo "Creating release package $(RELEASE_FILE_NAME)..."
-	@mkdir -p $(RELEASE_DIR)
-	@cp ./build/zephyr/zephyr.uf2 $(RELEASE_DIR)/$(RELEASE_FILE_NAME)
+bin: build
+	@echo "Creating release package $(BIN_FILE_NAME)..."
+	@mkdir -p $(BIN_DIR)
+	@cp ./build/zephyr/zephyr.uf2 $(BIN_DIR)/$(BIN_FILE_NAME)
 
 
 
