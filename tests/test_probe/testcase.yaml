@@ -1,0 +1,19 @@
+tests:
+  cb_jtag_probe.test_probe.pytest:
+    sysbuild: true
+    harness: pytest
+    timeout: 120
+    extra_args:
+      - APP_DIR=/workspace/cb_jtag_probe.fw/app
+    tags:
+      - cb_jtag_probe
+      - pytest
+      - jtag
+    platform_allow:
+      - rpi_pico2/rp2350a/m33
+    integration_platforms:
+      - rpi_pico2/rp2350a/m33
+    harness_config:
+      pytest_dut_scope: class
+      pytest_root:
+        - "test_probe_interface.py"

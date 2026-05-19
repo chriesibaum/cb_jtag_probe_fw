@@ -1,0 +1,10 @@
+# Twister hardware map for cb_jtag_probe hardware tests.
+# Update serial or id when your probe/board changes.
+
+- connected: true
+  platform: rpi_pico2/rp2350a/m33
+  product: cb_jtag_probe_target
+  runner: jlink
+  id: ""
+  serial: /dev/ttyUSB0
+  baud: 115200

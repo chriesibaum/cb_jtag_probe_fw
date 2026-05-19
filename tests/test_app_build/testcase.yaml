@@ -1,0 +1,22 @@
+tests:
+  # cb_getting_started.build.nucleo_u385rg_q:
+  #   tags:
+  #     - cb_getting_started
+  #     - smoke
+  #   build_only: true
+  #   platform_allow:
+  #     - nucleo_u385rg_q
+  #   extra_args:
+  #     - CONF_FILE=../../../samples/cb_getting_started/prj.conf;../../../samples/cb_getting_started/prj_log.conf
+
+  app.build.rpi_pico2_rp2350a_m33:
+    tags:
+      - app_build
+      - smoke
+    build_only: true
+    platform_allow:
+      - rpi_pico2/rp2350a/m33
+    extra_args:
+      - CONF_FILE=../../app/prj.conf;../../app/prj_log.conf
+      - DTC_OVERLAY_FILE=../../app/boards/rpi_pico2_rp2350a_m33.overlay
+      - EXTRA_CONF_FILE=../../app/boards/rpi_pico2_rp2350a_m33.conf
